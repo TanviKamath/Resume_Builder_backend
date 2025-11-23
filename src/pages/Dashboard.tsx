@@ -1,13 +1,28 @@
 import React, { useEffect } from 'react'
 import { Plus as PlusIcon, UploadCloud as UploadCloudIcon, FilePen as FilePenIcon, Edit3 as EditIcon, Trash2 as TrashIcon } from 'lucide-react'
+import { X as XIcon } from 'lucide-react'
 import { set } from 'date-fns'
 import { dummyResumeData } from '../../assets/assets'
+import { useNavigate } from 'react-router-dom'
+
 
 const Dashboard: React.FC = () => { 
 
     const [allResumes, setAllResumes] = React.useState([])
+    const [showCreateResume, setShowCreateResume] = React.useState(false)
+    const [showUploadResume, setShowUploadResume] = React.useState(false)
+    const [newResumeTitle, setNewResumeTitle] = React.useState('')
+    const [resume , setResume] = React.useState(null)
+    const [editresumeId, setEditResumeId] = React.useState('')
+    const navigate = useNavigate();
     const loadResumes = () => {
      setAllResumes(dummyResumeData)   
+    }
+    const CreateResume = (e: React.FormEvent) => {
+        e.preventDefault();
+        setShowCreateResume(false);
+        navigate(`/app/builder/new`);
+
     }
     useEffect(() => {
         loadResumes();
@@ -29,11 +44,11 @@ const Dashboard: React.FC = () => {
             <div className="max-w-4xl mx-auto bg-white dark:bg-slate-800 rounded-lg shadow-sm p-6">
                 <p className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-4">Welcome to the Dashboard</p>
                 <div className="flex items-center gap-4">
-                    <button className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <button onClick={()=>setShowCreateResume(true)} className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500">
                         <PlusIcon className="w-4 h-4" />
                         <p className="m-0">Create New Resume</p>
                     </button>
-                    <button className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <button className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500">
                         <UploadCloudIcon className="w-4 h-4" />
                         <p className="m-0">Upload Resume</p>
                     </button>
@@ -61,6 +76,21 @@ const Dashboard: React.FC = () => {
                         </div>
                     ))}
                 </div>
+
+                {showCreateResume && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center">
+                        <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={() => setShowCreateResume(false)} />
+
+                        <form onSubmit={CreateResume} action="" className="relative z-10 w-full max-w-md mx-4 border border-gray-300 rounded-lg p-6 bg-white dark:bg-slate-800 shadow-lg">
+                            <div onClick={e => e.stopPropagation()} className="relative">
+                                <h2 className="text-lg font-semibold mb-3 text-slate-900 dark:text-slate-100">Create Resume</h2>
+                                <input type="text" placeholder='Enter Resume Title' className='w-full px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100' required={true} value={newResumeTitle} onChange={e => setNewResumeTitle(e.target.value)} />
+                                <button type="submit" className="mt-3 w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-md">Create Resume</button>
+                                <XIcon onClick={() => { setShowCreateResume(false); setNewResumeTitle(''); }} className="absolute top-3 right-3 w-5 h-5 cursor-pointer text-slate-600 dark:text-slate-200" />
+                            </div>
+                        </form>
+                    </div>
+                )}
                 
             </div>
         </div>
