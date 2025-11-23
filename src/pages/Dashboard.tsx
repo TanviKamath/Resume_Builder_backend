@@ -40,6 +40,14 @@ const Dashboard: React.FC = () => {
     const editTitle = (e: React.FormEvent) => {
         e.preventDefault();
     }
+
+    const deleteResume = (id: string) => {
+        const confirm = window.confirm("Are you sure you want to delete this resume?");
+        if (confirm) {
+            setAllResumes(prevResumes => prevResumes.filter((resume: any) => resume._id !== id));
+        }
+    }
+
     const [uploadTitle, setUploadTitle] = React.useState('')
     const [selectedFile, setSelectedFile] = React.useState<File | null>(null)
 
@@ -92,7 +100,7 @@ const Dashboard: React.FC = () => {
                                     <EditIcon onClick={() => { setEditResumeId(resume._id); setNewResumeTitle(resume.title); }} className="w-4 h-4" />
                                 </button>
                                 <button aria-label="delete" className="p-1 rounded-full bg-white/70 dark:bg-slate-700/60 hover:bg-white text-slate-700 dark:text-slate-200">
-                                    <TrashIcon className="w-4 h-4" />
+                                    <TrashIcon onClick={()=>deleteResume(resume._id)} className="w-4 h-4" />
                                 </button>
                             </div>
 
