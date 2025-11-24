@@ -4,7 +4,9 @@ import { dummyResumeData } from '../../assets/assets'
 import { User, FileText, Briefcase, GraduationCap, Folder, Sparkles, ChevronLeftIcon , ChevronRightIcon} from 'lucide-react'
 import { ArrowLeft, ArrowLeftIcon } from 'lucide-react';
 import PersonalInfoForm from '../components/personal_info_form'
-import Resume_Preview from '@/components/Resume_Preview';
+import Resume_Preview from '../components/Resume_Preview';
+import TemplateSelector from '../components/TemplateSelector'
+import ColorPicker from '../components/ColorPicker'
 
 
 const sections: Array<{ id: string; name: string; icon: any }> = [
@@ -92,8 +94,22 @@ const Resume_Builder: React.FC = () => {
                                     style={{ width: `${activeSectionIndex * 100 / (sections.length - 1)}%` }}
                                 />
 
-                                <div className='w-full flex justify-between items-center mb-4 px-4 mt-4 border-gray-300 py-1'>
-                                    <div></div>
+                                <div className='w-full flex justify-between items-center mb-4 px-4 mt-4 border-gray-300 py-0'>
+                                        <div>
+                                            {activeSectionIndex === 0 && (
+                                                    <div className='flex items-center gap-4'>
+                                                        <TemplateSelector
+                                                            value={resumeData.templates}
+                                                            onChange={(t) => setResumeData(prev => ({ ...prev, templates: t }))}
+                                                        />
+
+                                                        <ColorPicker
+                                                            value={resumeData.accent_color}
+                                                            onChange={(c) => setResumeData(prev => ({ ...prev, accent_color: c }))}
+                                                        />
+                                                    </div>
+                                                )}
+                                        </div>
                                     <div className='flex items-center justify-between'>
                                         {activeSectionIndex > 0 && (
                                             <button
