@@ -3,11 +3,35 @@ import { Mail, Phone, MapPin, Linkedin, Globe } from "lucide-react";
 const ClassicTemplate = ({ data, accentColor }) => {
     const formatDate = (dateStr) => {
         if (!dateStr) return "";
-        const [year, month] = dateStr.split("-");
-        return new Date(year, month - 1).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "short"
-        });
+        // normalize to string
+        const s = String(dateStr).trim();
+
+        // 1) ISO-ish: YYYY-MM or YYYY-MM-DD
+        const isoMatch = s.match(/^(\d{4})-(\d{1,2})(?:-\d{1,2})?$/)
+        if (isoMatch) {
+            const year = Number(isoMatch[1])
+            const month = Number(isoMatch[2])
+            return new Date(year, month - 1).toLocaleDateString("en-US", { year: "numeric", month: "short" })
+        }
+
+        // 2) MonthName YYYY e.g. "Jan 2025" or "January 2025"
+        const m = s.match(/^([A-Za-z]+)\s+(\d{4})$/)
+        if (m) {
+            const mon = m[1].slice(0, 3).toLowerCase()
+            const monthIndex = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'].indexOf(mon)
+            if (monthIndex >= 0) {
+                return new Date(Number(m[2]), monthIndex).toLocaleDateString("en-US", { year: "numeric", month: "short" })
+            }
+        }
+
+        // 3) As a last resort, let Date.parse try to handle it (covers many common formats)
+        const parsed = Date.parse(s)
+        if (!isNaN(parsed)) {
+            return new Date(parsed).toLocaleDateString("en-US", { year: "numeric", month: "short" })
+        }
+
+        // 4) Fallback: return the original string so user input is visible instead of 'Invalid Date'
+        return s
     };
 
     return (

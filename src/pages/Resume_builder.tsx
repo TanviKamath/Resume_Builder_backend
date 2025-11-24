@@ -4,9 +4,14 @@ import { dummyResumeData } from '../../assets/assets'
 import { User, FileText, Briefcase, GraduationCap, Folder, Sparkles, ChevronLeftIcon , ChevronRightIcon} from 'lucide-react'
 import { ArrowLeft, ArrowLeftIcon } from 'lucide-react';
 import PersonalInfoForm from '../components/personal_info_form'
+import PersonalSummaryForm from '../components/personal_summary_form'
+import ExperienceForm from '../components/experience_form'
+import EducationForm from '../components/education'
+import ProjectForm from '../components/project_form'
 import Resume_Preview from '../components/Resume_Preview';
 import TemplateSelector from '../components/TemplateSelector'
 import ColorPicker from '../components/ColorPicker'
+import SkillsForm from '../components/skills_form'
 
 
 const sections: Array<{ id: string; name: string; icon: any }> = [
@@ -31,8 +36,9 @@ const Resume_Builder: React.FC = () => {
         personal_info: {},
         professional_summary: '',
         experience: [],
+        project: [],
         education: [],
-        skills: [],
+            skills: [],
         templates: 'classic',
         accent_color: '#3B82F6',
         public : false,
@@ -142,6 +148,50 @@ const Resume_Builder: React.FC = () => {
                                         set={setRemoveBackground}
                                     />
                                 )}
+
+                                {activeSection.id === 'summary' && (
+                                    <PersonalSummaryForm
+                                        data={{ summary: resumeData.professional_summary }}
+                                        onChange={(d) => setResumeData(prev => ({ ...prev, professional_summary: d.summary }))}
+                                    />
+                                )}
+
+                                {activeSection.id === 'experience' && (
+                                    <ExperienceForm
+                                        data={resumeData.experience}
+                                        onChange={(arr) => setResumeData(prev => ({ ...prev, experience: arr }))}
+                                    />
+                                )}
+
+                                {activeSection.id === 'education' && (
+                                    <EducationForm
+                                        data={resumeData.education}
+                                        onChange={(arr) => setResumeData(prev => ({ ...prev, education: arr }))}
+                                    />
+                                )}
+
+                                {activeSection.id === 'projects' && (
+                                    <ProjectForm
+                                        data={resumeData.project}
+                                        onChange={(arr) => setResumeData(prev => ({ ...prev, project: arr }))}
+                                    />
+                                )}
+                                    {activeSection.id === 'skills' && (
+                                        (() => {
+                                            const raw = Array.isArray(resumeData.skills) ? resumeData.skills : []
+                                            const editorData = raw.map((s: any, i: number) => {
+                                                if (typeof s === 'string') return { id: `skill-${i}`, name: s, level: '' }
+                                                return { id: s?.id ?? `skill-${i}`, name: s?.name ?? s ?? '', level: s?.level ?? '' }
+                                            })
+
+                                            return (
+                                                <SkillsForm
+                                                    data={editorData}
+                                                    onChange={(arr) => setResumeData(prev => ({ ...prev, skills: arr.map(a => a.name) }))}
+                                                />
+                                            )
+                                        })()
+                                    )}
                             </div>
                         </div>
                     </div>
