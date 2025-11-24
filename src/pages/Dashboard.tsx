@@ -21,7 +21,9 @@ const Dashboard: React.FC = () => {
     const CreateResume = (e: React.FormEvent) => {
         e.preventDefault();
         setShowCreateResume(false);
-        navigate(`/app/builder/new`)
+        // pass the entered title to the builder via route state
+        navigate(`/app/builder/new`, { state: { title: newResumeTitle } })
+        setNewResumeTitle('')
     }
     const UploadResume = (e: React.FormEvent) => {
         e.preventDefault();
